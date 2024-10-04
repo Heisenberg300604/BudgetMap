@@ -2,7 +2,7 @@
 
 BudgetMap is a responsive, user-friendly expense tracker web app designed to help users manage their budgets on a monthly and yearly basis. Users can track expenses, manage budgets, and visualize their savings effectively.
 
-## Features
+## Features (May Change)
 
 - **Monthly and Yearly Budgets**: Manage budgets on a monthly and yearly basis.
 - **Add, Update, Delete Expenses**: Simple CRUD operations for managing expenses.
@@ -14,7 +14,6 @@ BudgetMap is a responsive, user-friendly expense tracker web app designed to hel
 - **Income Management**: Track both expenses and incomes, and calculate net savings.
 - **Multi-Currency Support**: Handle expenses in multiple currencies with real-time conversion rates.
 - **Data Export**: Export expense data in CSV or PDF format.
-- **Dark Mode**: Switch between light and dark themes for a personalized experience.
 - **Authentication**: Users can sign up, log in, and manage their profiles.
 - **Savings Goals**: Set savings goals and track progress.
 
