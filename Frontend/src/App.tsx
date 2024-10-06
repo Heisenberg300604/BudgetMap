@@ -1,13 +1,15 @@
-import LandingPage from './Pages/LandingPage'
-// import Register from './Pages/Register'
-// import Login from './Pages/Login'
+// import LandingPage from './Pages/LandingPage'
+import { RouterProvider } from 'react-router-dom'
+import { router } from './Routes/routes'
+
 
 function App() {
 
   return (
     <>
       {/* <Login/> */}
-      <LandingPage/>
+      {/* <LandingPage/> */}
+      <RouterProvider router={router} />;
       {/* <Register/> */}
     </>
   )

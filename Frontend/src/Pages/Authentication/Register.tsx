@@ -1,4 +1,5 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
+import { Link } from 'react-router-dom';
 
 const Register: React.FC = () => {
   const [fullName, setFullName] = useState<string>('');
@@ -97,9 +98,9 @@ const Register: React.FC = () => {
           </div>
         </form>
         <div className="text-sm text-center">
-          <a href="#" className="font-medium text-green-600 hover:text-green-500 hover:underline">
+          <Link to="/login" className="font-medium text-green-600 hover:text-green-500 hover:underline">
             Already have an account? Log in
-          </a>
+          </Link>
         </div>
       </div>
     </div>
