@@ -8,6 +8,8 @@ import Profile from '@/Pages/Profile/Profile';
 import DashboardLayout from '@/Layouts/DashboardLayout';
 import Dashboard from '../Pages/Dashboard/Dashboard';
 import NotFound from '@/Pages/NotFound';
+import MonthList from '@/Pages/Home/MonthList';
+import CreateMonth from '@/Pages/Home/CreateMonth';
 
 export const router = createBrowserRouter([
     {
@@ -44,8 +46,18 @@ export const router = createBrowserRouter([
                 path: "/dashboard",
                 element: <Dashboard activeTab=""/>
             },
+           
         ]
     },
+    {
+      path: "/home",
+              element: <MonthList/>
+    },
+    {
+      path: "/months/new",
+              element: <CreateMonth/>
+    },
+
     {
       path: "*",
       element: <NotFound/> ,
