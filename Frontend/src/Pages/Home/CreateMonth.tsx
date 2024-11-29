@@ -1,9 +1,7 @@
-'use client'
-
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-hot-toast'
-import { AlertCircle, Calendar, DollarSign, Target, ArrowLeft, Shield, PiggyBank, Loader2 } from 'lucide-react'
+import { AlertCircle, Calendar, DollarSign, Target, ArrowLeft, Shield, PiggyBank, Loader2, ChevronDown } from 'lucide-react'
 
 interface FormData {
   name: string
@@ -19,6 +17,11 @@ interface ValidationErrors {
   savingTarget?: string
 }
 
+const MONTHS = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December'
+]
+
 export default function CreateMonth() {
   const [formData, setFormData] = useState<FormData>({
     name: '',
@@ -28,7 +31,29 @@ export default function CreateMonth() {
   })
   const [errors, setErrors] = useState<ValidationErrors>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isMonthDropdownOpen, setIsMonthDropdownOpen] = useState(false)
+  const [isYearDropdownOpen, setIsYearDropdownOpen] = useState(false)
   const navigate = useNavigate()
+
+  const years = Array.from(
+    { length: 7 }, 
+    (_, i) => new Date().getFullYear() - 1 + i
+  )
+
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest('[data-dropdown]')) {
+        setIsMonthDropdownOpen(false);
+        setIsYearDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const validateForm = (): boolean => {
     const newErrors: ValidationErrors = {}
@@ -106,6 +131,22 @@ export default function CreateMonth() {
     }
   }
 
+  const handleMonthSelect = (month: string) => {
+    setFormData(prev => ({ ...prev, name: month }))
+    setIsMonthDropdownOpen(false)
+    if (errors.name) {
+      setErrors(prev => ({ ...prev, name: undefined }))
+    }
+  }
+
+  const handleYearSelect = (year: number) => {
+    setFormData(prev => ({ ...prev, year }))
+    setIsYearDropdownOpen(false)
+    if (errors.year) {
+      setErrors(prev => ({ ...prev, year: undefined }))
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-2xl">
@@ -137,33 +178,46 @@ export default function CreateMonth() {
                   >
                     Month Name
                   </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Calendar className="h-5 w-5 text-gray-400" />
-                    </div>
-                    <input
-                      id="name"
-                      name="name"
-                      type="text"
-                      value={formData.name}
-                      onChange={handleChange}
+                  <div className="relative" data-dropdown>
+                    <button
+                      type="button"
+                      onClick={() => setIsMonthDropdownOpen(!isMonthDropdownOpen)}
                       className={`
-                        block w-full pl-10 pr-3 py-2.5 rounded-lg
+                        relative w-full pl-10 pr-3 py-2.5 rounded-lg text-left
                         border ${errors.name ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'}
                         bg-white dark:bg-gray-700
                         text-gray-900 dark:text-white
-                        placeholder-gray-400 dark:placeholder-gray-400
                         focus:outline-none focus:ring-2 
                         ${errors.name ? 'focus:ring-red-500' : 'focus:ring-green-500'}
                         transition-colors
                       `}
-                      placeholder="e.g., January"
-                    />
+                    >
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <Calendar className="h-5 w-5 text-gray-400" />
+                      </div>
+                      {formData.name || 'Select Month'}
+                      <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                    </button>
+                    
+                    {isMonthDropdownOpen && (
+                      <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 rounded-lg shadow-lg border border-gray-200 dark:border-gray-600 max-h-60 overflow-auto">
+                        {MONTHS.map((month) => (
+                          <button
+                            key={month}
+                            type="button"
+                            onClick={() => handleMonthSelect(month)}
+                            className="w-full px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-white"
+                          >
+                            {month}
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
                   {errors.name && (
                     <p className="mt-1.5 text-sm text-red-500 flex items-center">
                       <AlertCircle className="w-4 h-4 mr-1" />
-                      {errors.name.replace('Period', 'Month')}
+                      {errors.name}
                     </p>
                   )}
                 </div>
@@ -175,24 +229,39 @@ export default function CreateMonth() {
                   >
                     Year
                   </label>
-                  <input
-                    id="year"
-                    name="year"
-                    type="number"
-                    value={formData.year}
-                    onChange={handleChange}
-                    className={`
-                      block w-full px-3 py-2.5 rounded-lg
-                      border ${errors.year ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'}
-                      bg-white dark:bg-gray-700
-                      text-gray-900 dark:text-white
-                      focus:outline-none focus:ring-2 
-                      ${errors.year ? 'focus:ring-red-500' : 'focus:ring-green-500'}
-                      transition-colors
-                    `}
-                    min={new Date().getFullYear() - 1}
-                    max={new Date().getFullYear() + 5}
-                  />
+                  <div className="relative" data-dropdown>
+                    <button
+                      type="button"
+                      onClick={() => setIsYearDropdownOpen(!isYearDropdownOpen)}
+                      className={`
+                        w-full px-3 py-2.5 rounded-lg text-left
+                        border ${errors.year ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'}
+                        bg-white dark:bg-gray-700
+                        text-gray-900 dark:text-white
+                        focus:outline-none focus:ring-2 
+                        ${errors.year ? 'focus:ring-red-500' : 'focus:ring-green-500'}
+                        transition-colors
+                      `}
+                    >
+                      {formData.year}
+                      <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                    </button>
+                    
+                    {isYearDropdownOpen && (
+                      <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 rounded-lg shadow-lg border border-gray-200 dark:border-gray-600 max-h-60 overflow-auto">
+                        {years.map((year) => (
+                          <button
+                            key={year}
+                            type="button"
+                            onClick={() => handleYearSelect(year)}
+                            className="w-full px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-white"
+                          >
+                            {year}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                   {errors.year && (
                     <p className="mt-1.5 text-sm text-red-500 flex items-center">
                       <AlertCircle className="w-4 h-4 mr-1" />
