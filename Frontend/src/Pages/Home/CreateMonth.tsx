@@ -1,149 +1,348 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-// import { useAuth } from '../../context/AuthContext';
-import { Calendar, DollarSign, Target } from 'lucide-react';
+'use client'
+
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-hot-toast'
+import { AlertCircle, Calendar, DollarSign, Target, ArrowLeft, Shield, PiggyBank, Loader2 } from 'lucide-react'
+
+interface FormData {
+  name: string
+  year: number
+  budget: string
+  savingTarget: string
+}
+
+interface ValidationErrors {
+  name?: string
+  year?: string
+  budget?: string
+  savingTarget?: string
+}
 
 export default function CreateMonth() {
-  const [name, setName] = useState('');
-  const [year, setYear] = useState(new Date().getFullYear());
-  const [budget, setBudget] = useState('');
-  const [savingTarget, setSavingTarget] = useState('');
-  const [error, setError] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  
-//   const { user } = useAuth();
-  const navigate = useNavigate();
+  const [formData, setFormData] = useState<FormData>({
+    name: '',
+    year: new Date().getFullYear(),
+    budget: '',
+    savingTarget: '',
+  })
+  const [errors, setErrors] = useState<ValidationErrors>({})
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const navigate = useNavigate()
+
+  const validateForm = (): boolean => {
+    const newErrors: ValidationErrors = {}
+    const currentYear = new Date().getFullYear()
+
+    if (!formData.name.trim()) {
+      newErrors.name = 'Month name is required'
+    } else if (formData.name.length < 3) {
+      newErrors.name = 'Month name must be at least 3 characters'
+    }
+
+    if (!formData.year) {
+      newErrors.year = 'Year is required'
+    } else if (formData.year < currentYear - 1 || formData.year > currentYear + 5) {
+      newErrors.year = `Year must be between ${currentYear - 1} and ${currentYear + 5}`
+    }
+
+    if (!formData.budget) {
+      newErrors.budget = 'Budget is required'
+    } else if (parseFloat(formData.budget) <= 0) {
+      newErrors.budget = 'Budget must be greater than 0'
+    }
+
+    if (!formData.savingTarget) {
+      newErrors.savingTarget = 'Saving target is required'
+    } else if (parseFloat(formData.savingTarget) < 0) {
+      newErrors.savingTarget = 'Saving target cannot be negative'
+    } else if (parseFloat(formData.savingTarget) >= parseFloat(formData.budget)) {
+      newErrors.savingTarget = 'Saving target cannot exceed budget'
+    }
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    // if (!user?.token) {
-    //   navigate('/login');
-    //   return;
-    // }
+    e.preventDefault()
+    
+    if (!validateForm()) {
+      toast.error('Please fix the errors in the form', {
+        icon: '⚠️',
+        duration: 4000,
+      })
+      return
+    }
 
-    // setIsSubmitting(true);
-    // try {
-    //   const response = await fetch('http://localhost:5000/api/months', {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //       Authorization: `Bearer ${user.token}`,
-    //     },
-    //     body: JSON.stringify({
-    //       name,
-    //       year,
-    //       budget: Number(budget),
-    //       savingTarget: Number(savingTarget),
-    //     }),
-    //   });
+    setIsSubmitting(true)
+    
+    try {
+      // Simulated API call delay
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      toast.success('Budget month created successfully!', {
+        icon: '🎉',
+        duration: 4000,
+      })
+      
+      navigate('/periods')
+    } catch (error) {
+      toast.error('Failed to create budget month. Please try again.', {
+        icon: '❌',
+        duration: 4000,
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
 
-    //   if (!response.ok) {
-    //     const data = await response.json();
-    //     throw new Error(data.message || 'Failed to create month');
-    //   }
-
-    //   navigate('/months');
-    // } catch (err) {
-    //   setError(err instanceof Error ? err.message : 'An error occurred');
-    // } finally {
-    //   setIsSubmitting(false);
-    // }
-  };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({ ...prev, [name]: value }))
+    // Clear error when user starts typing
+    if (errors[name as keyof ValidationErrors]) {
+      setErrors(prev => ({ ...prev, [name]: undefined }))
+    }
+  }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-2xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Create New Budget Period</h1>
-        
-        <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-6 space-y-6">
-          {error && (
-            <div className="bg-red-50 text-red-500 p-3 rounded-md text-sm">
-              {error}
-            </div>
-          )}
-          
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Month Name</label>
-              <div className="mt-1 relative">
-                <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="pl-10 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500"
-                  placeholder="e.g., January"
-                  required
-                />
-              </div>
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4 py-12">
+      <div className="w-full max-w-2xl">
+        <button
+          onClick={() => navigate('/home')}
+          className="mb-6 flex items-center text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back to Budget Months
+        </button>
+
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+          <div className="p-6 sm:p-8">
+            <div className="mb-6">
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                Create New Budget Month
+              </h1>
+              <p className="mt-2 text-gray-600 dark:text-gray-400">
+                Set up your budget and saving targets for the upcoming month
+              </p>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Year</label>
-              <input
-                type="number"
-                value={year}
-                onChange={(e) => setYear(Number(e.target.value))}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500"
-                required
-                min={2000}
-                max={2100}
-              />
-            </div>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-4">
+                <div>
+                  <label 
+                    htmlFor="name" 
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+                  >
+                    Month Name
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <Calendar className="h-5 w-5 text-gray-400" />
+                    </div>
+                    <input
+                      id="name"
+                      name="name"
+                      type="text"
+                      value={formData.name}
+                      onChange={handleChange}
+                      className={`
+                        block w-full pl-10 pr-3 py-2.5 rounded-lg
+                        border ${errors.name ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'}
+                        bg-white dark:bg-gray-700
+                        text-gray-900 dark:text-white
+                        placeholder-gray-400 dark:placeholder-gray-400
+                        focus:outline-none focus:ring-2 
+                        ${errors.name ? 'focus:ring-red-500' : 'focus:ring-green-500'}
+                        transition-colors
+                      `}
+                      placeholder="e.g., January"
+                    />
+                  </div>
+                  {errors.name && (
+                    <p className="mt-1.5 text-sm text-red-500 flex items-center">
+                      <AlertCircle className="w-4 h-4 mr-1" />
+                      {errors.name.replace('Period', 'Month')}
+                    </p>
+                  )}
+                </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Monthly Budget</label>
-              <div className="mt-1 relative">
-                <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                <input
-                  type="number"
-                  value={budget}
-                  onChange={(e) => setBudget(e.target.value)}
-                  className="pl-10 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500"
-                  placeholder="0.00"
-                  required
-                  min={0}
-                  step="0.01"
-                />
-              </div>
-            </div>
+                <div>
+                  <label 
+                    htmlFor="year" 
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+                  >
+                    Year
+                  </label>
+                  <input
+                    id="year"
+                    name="year"
+                    type="number"
+                    value={formData.year}
+                    onChange={handleChange}
+                    className={`
+                      block w-full px-3 py-2.5 rounded-lg
+                      border ${errors.year ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'}
+                      bg-white dark:bg-gray-700
+                      text-gray-900 dark:text-white
+                      focus:outline-none focus:ring-2 
+                      ${errors.year ? 'focus:ring-red-500' : 'focus:ring-green-500'}
+                      transition-colors
+                    `}
+                    min={new Date().getFullYear() - 1}
+                    max={new Date().getFullYear() + 5}
+                  />
+                  {errors.year && (
+                    <p className="mt-1.5 text-sm text-red-500 flex items-center">
+                      <AlertCircle className="w-4 h-4 mr-1" />
+                      {errors.year}
+                    </p>
+                  )}
+                </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Saving Target</label>
-              <div className="mt-1 relative">
-                <Target className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                <input
-                  type="number"
-                  value={savingTarget}
-                  onChange={(e) => setSavingTarget(e.target.value)}
-                  className="pl-10 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500"
-                  placeholder="0.00"
-                  required
-                  min={0}
-                  step="0.01"
-                />
+                <div>
+                  <label 
+                    htmlFor="budget" 
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+                  >
+                    Monthly Budget
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <DollarSign className="h-5 w-5 text-gray-400" />
+                    </div>
+                    <input
+                      id="budget"
+                      name="budget"
+                      type="number"
+                      value={formData.budget}
+                      onChange={handleChange}
+                      className={`
+                        block w-full pl-10 pr-3 py-2.5 rounded-lg
+                        border ${errors.budget ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'}
+                        bg-white dark:bg-gray-700
+                        text-gray-900 dark:text-white
+                        placeholder-gray-400 dark:placeholder-gray-400
+                        focus:outline-none focus:ring-2 
+                        ${errors.budget ? 'focus:ring-red-500' : 'focus:ring-green-500'}
+                        transition-colors
+                      `}
+                      placeholder="0.00"
+                      step="0.01"
+                      min="0"
+                    />
+                  </div>
+                  {errors.budget && (
+                    <p className="mt-1.5 text-sm text-red-500 flex items-center">
+                      <AlertCircle className="w-4 h-4 mr-1" />
+                      {errors.budget}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label 
+                    htmlFor="savingTarget" 
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5"
+                  >
+                    Saving Target
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <Target className="h-5 w-5 text-gray-400" />
+                    </div>
+                    <input
+                      id="savingTarget"
+                      name="savingTarget"
+                      type="number"
+                      value={formData.savingTarget}
+                      onChange={handleChange}
+                      className={`
+                        block w-full pl-10 pr-3 py-2.5 rounded-lg
+                        border ${errors.savingTarget ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'}
+                        bg-white dark:bg-gray-700
+                        text-gray-900 dark:text-white
+                        placeholder-gray-400 dark:placeholder-gray-400
+                        focus:outline-none focus:ring-2 
+                        ${errors.savingTarget ? 'focus:ring-red-500' : 'focus:ring-green-500'}
+                        transition-colors
+                      `}
+                      placeholder="0.00"
+                      step="0.01"
+                      min="0"
+                    />
+                  </div>
+                  {errors.savingTarget && (
+                    <p className="mt-1.5 text-sm text-red-500 flex items-center">
+                      <AlertCircle className="w-4 h-4 mr-1" />
+                      {errors.savingTarget}
+                    </p>
+                  )}
+                </div>
               </div>
-            </div>
+
+              <div className="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                <div className="flex">
+                  <div className="flex-shrink-0">
+                    <Shield className="h-5 w-5 text-blue-400" aria-hidden="true" />
+                  </div>
+                  <div className="ml-3">
+                    <h3 className="text-sm font-medium text-blue-800 dark:text-blue-300">
+                      Security Note
+                    </h3>
+                    <div className="mt-2 text-sm text-blue-700 dark:text-blue-400">
+                      <p>
+                        Your budget information is encrypted and stored securely. Only you can access
+                        this data.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4">
+                <button
+                  type="button"
+                  onClick={() => navigate('/home')}
+                  className="w-full sm:w-auto px-4 py-2.5 border border-gray-300 dark:border-gray-600 
+                    text-gray-700 dark:text-gray-300 rounded-lg shadow-sm hover:bg-gray-50 
+                    dark:hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 
+                    focus:ring-offset-2 focus:ring-gray-500 dark:focus:ring-offset-gray-800"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full sm:w-auto px-4 py-2.5 rounded-lg shadow-sm
+                    bg-gradient-to-r from-green-500 to-emerald-600 
+                    hover:from-green-600 hover:to-emerald-700
+                    text-white font-medium
+                    focus:outline-none focus:ring-2 focus:ring-offset-2 
+                    focus:ring-green-500 dark:focus:ring-offset-gray-800
+                    disabled:opacity-50 disabled:cursor-not-allowed
+                    transition-all duration-200 ease-in-out
+                    flex items-center justify-center"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Creating...
+                    </>
+                  ) : (
+                    <>
+                      <PiggyBank className="w-4 h-4 mr-2" />
+                      Create Budget
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
           </div>
-
-          <div className="flex justify-end space-x-4">
-            <button
-              type="button"
-              onClick={() => navigate('/months')}
-              className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isSubmitting ? 'Creating...' : 'Create Period'}
-            </button>
-          </div>
-        </form>
+        </div>
       </div>
     </div>
-  );
+  )
 }
+

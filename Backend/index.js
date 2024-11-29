@@ -13,7 +13,10 @@ const port = process.env.PORT || 3000;
 
 // Middleware
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true,
+}));
 
 // Routes
 app.get('/', (req, res) => {
@@ -24,7 +27,7 @@ app.get('/', (req, res) => {
 connectDB();
 
 // using the routes
-app.use("/api/v1",userRouter);
+app.use("/api/v1", userRouter);
 
 // Start server
 app.listen(port, () => {

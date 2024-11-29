@@ -1,13 +1,19 @@
-import { ChangeEvent, FormEvent, useState } from 'react'
+import { ChangeEvent, FormEvent } from 'react'
+import useLogin from '@/hooks/useLogin'
+import Loader from '@/Components/Shared/Loader'
+import { useLoading } from '@/Context/LoadingContext'
 
-export default function Login() {
-  const [email, setEmail] = useState<string>('')
-  const [password, setPassword] = useState<string>('')
+const Login: React.FC = () => {
+  const { email, setEmail, password, setPassword, login } = useLogin()
+  const { isLoading } = useLoading()
 
-  const handleSubmit = (e:FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    // Handle login logic here
-    console.log('Login attempted with:', { email, password })
+    login()
+  }
+
+  if (isLoading) {
+    return <Loader />
   }
 
   return (
@@ -22,7 +28,7 @@ export default function Login() {
           <div className="rounded-md shadow-sm space-y-4">
             <div>
               <label htmlFor="email-address" className="block text-sm font-medium text-gray-700 mb-1">
-                Email 
+                Email
               </label>
               <input
                 id="email-address"
@@ -33,7 +39,7 @@ export default function Login() {
                 className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
                 placeholder="Enter your Email address"
                 value={email}
-                onChange={(e:ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
               />
             </div>
             <div>
@@ -49,7 +55,7 @@ export default function Login() {
                 className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
                 placeholder="Enter your Password"
                 value={password}
-                onChange={(e:ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
               />
             </div>
           </div>
@@ -63,6 +69,7 @@ export default function Login() {
             </button>
           </div>
         </form>
+
         <div className="text-sm text-center">
           <a href="#" className="font-medium text-green-600 hover:text-green-500 hover:underline">
             Not registered? Create an account
@@ -72,3 +79,5 @@ export default function Login() {
     </div>
   )
 }
+
+export default Login

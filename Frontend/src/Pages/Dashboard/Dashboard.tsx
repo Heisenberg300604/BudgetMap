@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "../../Components/ui/card"
-import AddExpense from '../Dashboard/AddExpenses'
-import ViewExpenses from '../Dashboard/ViewExpenses'
-import ManageBudget from '../Dashboard/ManageExpenses'
+import ViewTransactions from "./ViewTransaction";
+import Settings from "../Settings/Settings";
+import AddTransactions from "./AddTransactions";
 
 interface DashboardProps {
   activeTab: string;
@@ -10,9 +10,9 @@ interface DashboardProps {
 export default function Dashboard({ activeTab = 'dashboard' }: DashboardProps) {
 
   return (
-    <main className="container mx-auto px-4 py-8">
+    <main className="container mx-auto">
       {activeTab === 'dashboard' && (
-        <>
+        <div className="py-8 px-4">
           <h2 className="text-3xl font-bold mb-6">Dashboard</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <Card>
@@ -76,12 +76,11 @@ export default function Dashboard({ activeTab = 'dashboard' }: DashboardProps) {
               </table>
             </CardContent>
           </Card>
-        </>
+        </div>
       )}
-
-      {activeTab === 'addExpense' && <AddExpense />}
-      {activeTab === 'viewExpenses' && <ViewExpenses />}
-      {activeTab === 'manageBudget' && <ManageBudget />}
+      {activeTab === 'addTransactions' && <AddTransactions/>}
+      {activeTab === 'viewTransactions' && <ViewTransactions />}
+      {activeTab === 'settings' && <Settings/>}
     </main>
   )
 }

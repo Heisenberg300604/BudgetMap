@@ -3,7 +3,7 @@ import validator from 'validator';
 
 const userSchema = new mongoose.Schema(
   {
-    name: {
+    fullName: {
       type: String,
       required: [true, 'Name is required'],
       trim: true,
@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema(
     email: {
       type: String,
       required: [true, 'Email is required'],
-      unique: true, // Ensures no duplicate emails
+      unique: true,
       validate: {
         validator: validator.isEmail,
         message: 'Please provide a valid email',

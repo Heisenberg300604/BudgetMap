@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import User from '../Models/user.model.js';
 
 export const register = async (req, res) => {
-    const { name, email, password } = req.body;
+    const { fullName, email, password } = req.body;
 
     // Check if the user already exists
     let user = await User.findOne({ email });
@@ -20,7 +20,7 @@ export const register = async (req, res) => {
     // Create new user
     try {
         user = await User.create({
-            name,
+            fullName,
             email,
             password: hashedPassword // Store hashed password
         });
@@ -30,7 +30,7 @@ export const register = async (req, res) => {
             message: "User created successfully!",
             user: {
                 id: user._id,
-                name: user.name,
+                fullName: user.fullName,
                 email: user.email,
             }
         });
@@ -81,6 +81,7 @@ export const login = async (req, res) => {
         return res.status(200).json({
             success: true,
             message: "Login successful!",
+            token,
             user: {
                 id: user._id,
                 name: user.name,

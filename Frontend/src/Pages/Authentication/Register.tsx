@@ -1,17 +1,59 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'
+import API_BASE_URL from '@/Config/ApiConfig';
+import axios from 'axios'
+import toast from 'react-hot-toast'
+import { useLoading } from '@/Context/LoadingContext';
+import Loader from '@/Components/Shared/Loader';
 
 const Register: React.FC = () => {
   const [fullName, setFullName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
+  const navigate = useNavigate();
+  const { isLoading,setIsLoading } = useLoading()
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const register = async(e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Handle registration logic here
+    // registration logic
+    if(!fullName || !email || !password || !confirmPassword) {
+      toast.error('Please fill all fields ❌');
+      return;
+    }
+    if(password !== confirmPassword) {
+      toast.error('Passwords do not match ❌');
+      return;
+    }
+    setIsLoading(true)
+    try {
+      const response = await axios.post(
+        `${API_BASE_URL}/register`,
+        { fullName, email, password },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      )
+      console.log(response)
+      if (response.data.success) {
+        toast.success('Registration successful!', { duration: 4000 })
+        setIsLoading(false)
+        navigate('/login')
+      }
+    } catch (error: any) {
+      setIsLoading(false)
+      toast.error(error.response?.data?.message || 'An error occurred, please try again later.', { duration: 4000 })
+    }
     console.log('Registration attempted with:', { fullName, email, password, confirmPassword });
   };
+
+  if(isLoading){
+    return <Loader />;
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -21,7 +63,7 @@ const Register: React.FC = () => {
             Register to BudgetMap
           </h2>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <form className="mt-8 space-y-6" onSubmit={register}>
           <div className="rounded-md shadow-sm space-y-4">
             <div>
               <label htmlFor="full-name" className="block text-sm font-medium text-gray-700 mb-1">
