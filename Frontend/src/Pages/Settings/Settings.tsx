@@ -1,14 +1,20 @@
 import React, { useState } from 'react'
 import { User, Bell, Lock, Trash2, DollarSign, Crown,ChevronRight, Camera } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 const Settings: React.FC = () => {
   const [currency, setCurrency] = useState('$')
+  const navigate = useNavigate()
 
   const handleResetData = () => {
     if (window.confirm('Are you sure you want to reset all your data? This action cannot be undone.')) {
       // Reset data logic here
       console.log('Data reset')
     }
+  }
+
+  const handleNavigateToDataAndPrivacy = () => {
+    navigate('/data-and-privacy') // Navigate to the desired route
   }
 
   return (
@@ -67,7 +73,8 @@ const Settings: React.FC = () => {
             </div>
 
             {/* Data and Privacy */}
-            <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+            <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg cursor-pointer"
+            onClick={handleNavigateToDataAndPrivacy}>
               <div className="flex items-center">
                 <Lock className="w-5 h-5 text-green-500 mr-3" />
                 <span className="text-gray-700 dark:text-gray-200">Data and Privacy</span>

@@ -402,7 +402,7 @@ export default function CreateMonth() {
                   ) : (
                     <>
                       <PiggyBank className="w-4 h-4 mr-2" />
-                      Create Budget
+                      Create Month
                     </>
                   )}
                 </button>

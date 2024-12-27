@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import connectDB from './Config/db.js';
 import userRouter from "./Routes/auth.routes.js"
 import monthRouter from "./Routes/month.routes.js"
+import transactionRouter from "./Routes/transaction.routes.js"
 
 // load environment variables
 dotenv.config();
@@ -30,6 +31,7 @@ connectDB();
 // using the routes
 app.use("/api/v1", userRouter);
 app.use("/api/v1", monthRouter);
+app.use("/api/v1", transactionRouter);
 
 // Start server
 app.listen(port, () => {

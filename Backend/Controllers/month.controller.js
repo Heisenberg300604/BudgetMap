@@ -1,8 +1,6 @@
 import express from 'express';
 import Month from '../Models/month.model.js';
 
-const router = express.Router();
-
 // Create a new month
  
 export const createMonth = async (req, res) => {
@@ -25,4 +23,3 @@ export const createMonth = async (req, res) => {
     }
   }
 
-export default router;

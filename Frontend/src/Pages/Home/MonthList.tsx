@@ -1,5 +1,3 @@
-'use client'
-
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Calendar, Plus, Wallet, TrendingUp, Target, AlertCircle } from 'lucide-react'
@@ -28,7 +26,7 @@ export default function MonthList() {
   // Dummy data
   const [budgetPeriods] = useState<BudgetPeriod[]>([
     {
-      _id: '1',
+      _id: '674a21f7fb46c35e95217da7',
       name: 'January',
       year: 2024,
       budget: 5000,
@@ -128,7 +126,7 @@ export default function MonthList() {
           {budgetPeriods.map((period) => (
             <div
               key={period._id}
-              onClick={() => navigate(`/dashboard`)}
+              onClick={() => navigate(`/dashboard/${period._id}`)}
               className="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer group"
             >
               <div className="p-6">

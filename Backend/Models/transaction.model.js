@@ -4,12 +4,12 @@ const transactionSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-        required: true,
+        // required: true,
     },
     monthId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Month",
-        required: true,
+        // required: true,
     },
     amount: {
         type: Number,
@@ -24,6 +24,14 @@ const transactionSchema = new mongoose.Schema({
         required: true,
     },
     description: {
+        type: String,
+        required: true,
+    },
+    date: {
+        type: String,
+        required: true,
+    },
+    time: {
         type: String,
         required: true,
     },

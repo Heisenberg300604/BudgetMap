@@ -1,8 +1,12 @@
 import React, { useState } from 'react'
 import { PlusCircle, Calendar, Clock, Tag, FileText } from 'lucide-react'
 import toast from 'react-hot-toast'
+import API_BASE_URL from '@/Config/ApiConfig'
+import axios from 'axios'
+import { useParams } from 'react-router-dom'
 
 export default function AddTransactions() { 
+  const { monthId } = useParams();
   const [transaction, setTransaction] = useState({
     type: '',
     category: '',
@@ -11,19 +15,39 @@ export default function AddTransactions() {
     date: '',
     time: ''
   })
+  const userId = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).id : ''; // will change it later on upon building user context 
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const addTransaction = async (transactionData:any) => { // mention the transaction data type (to be done later)
+    try {
+      const response = await axios.post(`${API_BASE_URL}/transaction`, { ...transactionData, monthId, userId });
+      console.log('Transaction successfully added:', response.data);
+      toast.success('Transaction added successfully!', { duration: 4000 });
+    } catch (error) {
+      console.error('Error adding transaction:', error);
+      toast.error('Failed to add transaction. Please try again.');
+    }
+  };
+
+  const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault()
     console.log('Transaction submitted:', transaction)
-    setTransaction({
-      type: '',
-      category: '',
-      amount: '',
-      description: '',
-      date: '',
-      time: ''
-    })
-    toast.success('Transaction added successfully!', { duration: 4000 })
+    try {
+      const transactionData = { // pass the user id and the month id too (to be done later)
+        ...transaction,
+        amount: parseFloat(transaction.amount),
+      };
+      await addTransaction(transactionData);
+      setTransaction({
+        type: '',
+        category: '',
+        amount: '',
+        description: '',
+        date: '',
+        time: '',
+      });
+    } catch (error) {
+      console.error('Error submitting transaction:', error);
+    }
   }
 
   const handleSetCurrentDateTime = () => {
@@ -45,7 +69,8 @@ export default function AddTransactions() {
     'Education',
     'Travel',
     'Gifts & Donations',
-    'Investments'
+    'Investments',
+    'Others'
   ]
 
   return (
@@ -95,7 +120,6 @@ export default function AddTransactions() {
                     {categories.map((category) => (
                       <option key={category} value={category}>{category}</option>
                     ))}
-                    <option value="create_new">+ Create New Category</option>
                   </select>
                   <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
                     <Tag className="h-4 w-4 text-gray-400" />

@@ -10,56 +10,60 @@ import Dashboard from '../Pages/Dashboard/Dashboard';
 import NotFound from '@/Pages/NotFound';
 import MonthList from '@/Pages/Home/MonthList';
 import CreateMonth from '@/Pages/Home/CreateMonth';
+import DataPrivacyPage from '@/Pages/Data&Privacy/DataPrivacyPage';
 
 export const router = createBrowserRouter([
-    {
-      element: <RootLayout />,
-      children: [
-        {
-          path: "/",
-          element: <LandingPage />,
-        },
-        {
-            path:"/profile",
-            element:<Profile/>,
-        },
-        // add more routes with path and element
-      ],
-    },
-    {
-      element: <AuthLayout />,
-      children: [
-        {
-          path: "/login",
-          element: <Login />,
-        },
-        {
-          path: "/register",
-          element: <Register />,
-        },
-      ],
-    },
-    {
-        element: <DashboardLayout/>,
-        children:[
-            {
-                path: "/dashboard",
-                element: <Dashboard activeTab=""/>
-            },
-           
-        ]
-    },
-    {
-      path: "/home",
-              element: <MonthList/>
-    },
-    {
-      path: "/months/new",
-              element: <CreateMonth/>
-    },
+  {
+    element: <RootLayout />,
+    children: [
+      {
+        path: "/",
+        element: <LandingPage />,
+      },
+      {
+        path: "/profile",
+        element: <Profile />,
+      },
+      // add more routes with path and element
+    ],
+  },
+  {
+    element: <AuthLayout />,
+    children: [
+      {
+        path: "/login",
+        element: <Login />,
+      },
+      {
+        path: "/register",
+        element: <Register />,
+      },
+    ],
+  },
+  {
+    element: <DashboardLayout />,
+    children: [
+      {
+        path: "/dashboard/:monthId",
+        element: <Dashboard activeTab="" />
+      },
 
-    {
-      path: "*",
-      element: <NotFound/> ,
-    }
-  ]);
+    ]
+  },
+  {
+    path: "/home",
+    element: <MonthList />
+  },
+  {
+    path: "/months/new",
+    element: <CreateMonth />
+  },
+  {
+    path: "/data-and-privacy",
+    element: <DataPrivacyPage />
+  },
+  {
+    path: "*",
+    element: <NotFound />,
+  }
+]);

@@ -4,6 +4,7 @@ import Settings from "../Settings/Settings";
 import AddTransactions from "./AddTransactions";
 import { ArrowDown, ArrowUp, DollarSign, TrendingUp } from 'lucide-react'
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip } from 'recharts'
+import { useParams } from "react-router-dom";
 interface DashboardProps {
   activeTab: string;
 }
@@ -26,6 +27,7 @@ const monthlyData = [
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042']
 
 export default function Dashboard({ activeTab = 'dashboard' }: DashboardProps) {
+  const { monthId } = useParams();
 
   return (
     <main className="container mx-auto">
