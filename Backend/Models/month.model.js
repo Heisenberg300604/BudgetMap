@@ -16,11 +16,31 @@ const monthSchema = new mongoose.Schema({
   },
   budget: { 
     type: Number, 
-    required: true 
+    // required: true 
   },
-  savingTarget: { 
-    type: Number, 
-    required: true 
+  totalIncome: { // Remove this
+    type: Number,
+    default: 0
+  },
+  totalExpense: {
+    type: Number,
+    default: 0
+  },
+  netBalance: { // use math for this 
+    type: Number,
+    default: 0
+  },
+  savingTarget: {
+    type: Number,
+    required: true
+  },
+  currentSavings: { // ignore 
+    type: Number,
+    default: 0
+  },
+  savingsProgress: { //ignore
+    type: Number,
+    default: 0  // Percentage of savings target achieved
   },
   createdAt: { 
     type: Date, 

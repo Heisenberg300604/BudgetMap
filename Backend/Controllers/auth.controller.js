@@ -68,7 +68,7 @@ export const login = async (req, res) => {
         const token = jwt.sign(
             { _id: user._id },
             process.env.JWT_SECRET,
-            { expiresIn: '1h' } 
+            { expiresIn: '10d' } 
         );
 
         res.cookie('token', token, {
@@ -112,4 +112,53 @@ export const logout = (req, res) => {
         success: true,
         message: "Logout successful!"
     });
+};
+
+
+export const getUserDetails = async (req, res) => {
+    const token = req.headers.authorization?.split(' ')[1]; // Extract token from Authorization header
+
+    if (!token) {
+        return res.status(401).json({ message: 'Token is missing' });
+    }
+
+    try {
+        // Verify the token and extract payload
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        // Find the user in the database
+        const user = await User.findById(decoded._id);
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found!',
+            });
+        }
+
+        // Return user details
+        return res.status(200).json({
+            success: true,
+            user: {
+                id: user._id,
+                fullName: user.fullName,
+                email: user.email,
+                // Add any other fields you want to include
+            },
+        });
+    } catch (error) {
+        console.error(error);
+
+        // Handle specific JWT errors
+        if (error.name === 'TokenExpiredError') {
+            return res.status(403).json({ message: 'Token has expired', error: error.message });
+        } else if (error.name === 'JsonWebTokenError') {
+            return res.status(403).json({ message: 'Invalid token', error: error.message });
+        }
+
+        return res.status(500).json({
+            success: false,
+            message: 'Server error, please try again later.',
+        });
+    }
 };

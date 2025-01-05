@@ -1,7 +1,21 @@
-import { Button } from "../Components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "../Components/ui/card"
+import { Button } from "../Components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../Components/ui/card";
 // import { Tabs, TabsContent, TabsList, TabsTrigger } from "../Components/ui/tabs"
-import { BarChart, PieChart, Wallet, Calendar, PlusCircle, RefreshCw } from 'lucide-react'
+import {
+  BarChart,
+  PieChart,
+  Wallet,
+  Calendar,
+  PlusCircle,
+  RefreshCw,
+} from "lucide-react";
+import { Link } from "react-router-dom";
+import { FaGithub } from 'react-icons/fa';
 
 export default function LandingPage() {
   return (
@@ -9,20 +23,44 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section className=" container mx-auto px-1 py-12 md:py-24 flex flex-col md:flex-row items-center">
         <div className="md:w-1/2 mb-8 md:mb-0 ml-3">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">Take Control of Your Finances</h1>
-          <p className="text-xl mb-6 text-gray-600">Track expenses, manage budgets, and achieve your financial goals with ease.</p>
-          <Button size="lg" className="mr-4 bg-green-600 hover:bg-green-700">Get Started for Free</Button>
-          <Button size="lg" variant="outline" className="border-green-600 text-green-600 hover:bg-green-50">Learn More</Button>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">
+            Take Control of Your Finances
+          </h1>
+          <p className="text-xl mb-6 text-gray-600">
+            Track expenses, manage budgets, and achieve your financial goals
+            with ease.
+          </p>
+          <div className="flex justify-start gap-2">
+          <Link to="/register">
+            <Button size="lg" className="mr-4 bg-green-600 hover:bg-green-700">
+              Get Started for Free
+            </Button>
+          </Link>
+          <Button
+            size="lg"
+            variant="outline"
+            className="border-green-600 text-green-600 hover:bg-green-50 hover:border-green-700 hover:text-green-700 active:bg-green-100 transition-colors duration-200"
+            onClick={() =>
+              window.open("https://github.com/Heisenberg300604/BudgetMap", "_blank")
+            }
+          >
+            <FaGithub className="w-5 h-5 mr-1" />{" "}
+            Star on GitHub
+          </Button>
+          </div>
+          {/* <Button size="lg" variant="outline" className="border-green-600 text-green-600 hover:bg-green-50">Learn More</Button> */}
         </div>
         <div className="md:w-1/2">
-        <img src= "../public/saving.svg "></img>
+          <img src="../public/saving.svg "></img>
         </div>
       </section>
 
       {/* Features Section */}
       <section id="features" className="bg-green-50 py-16 md:py-24">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">Key Features</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
+            Key Features
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <FeatureCard
               icon={<BarChart className="w-12 h-12 text-green-600" />}
@@ -46,7 +84,9 @@ export default function LandingPage() {
       {/* How It Works Section */}
       <section id="how-it-works" className="py-16 md:py-24">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">How It Works</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
+            How It Works
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <StepCard
               icon={<Calendar className="w-10 h-10 text-green-600" />}
@@ -112,21 +152,32 @@ export default function LandingPage() {
       {/* CTA Section */}
       <section className="bg-green-600 text-white py-16">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Take Control of Your Finances?</h2>
-          <p className="text-xl mb-8">Join thousands of users who have already improved their financial health.</p>
-          <Button size="lg" variant="secondary" className="bg-white text-green-600 hover:bg-green-50">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            Ready to Take Control of Your Finances?
+          </h2>
+          <p className="text-xl mb-8">
+            Join thousands of users who have already improved their financial
+            health.
+          </p>
+          <Link to='/register'>
+          <Button
+            size="lg"
+            variant="secondary"
+            className="bg-white text-green-600 hover:bg-green-50"
+          >
             Sign Up Now
           </Button>
+          </Link>
         </div>
       </section>
     </div>
-  )
+  );
 }
 
 interface FeatureCardProps {
-  icon: React.ReactNode
-  title: string
-  description: string
+  icon: React.ReactNode;
+  title: string;
+  description: string;
 }
 
 function FeatureCard({ icon, title, description }: FeatureCardProps) {
@@ -134,19 +185,21 @@ function FeatureCard({ icon, title, description }: FeatureCardProps) {
     <Card>
       <CardHeader>
         <div className="flex justify-center mb-4">{icon}</div>
-        <CardTitle className="text-xl font-semibold text-center">{title}</CardTitle>
+        <CardTitle className="text-xl font-semibold text-center">
+          {title}
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <p className="text-gray-600 text-center">{description}</p>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 interface StepCardProps {
-  icon: React.ReactNode
-  title: string
-  description: string
+  icon: React.ReactNode;
+  title: string;
+  description: string;
 }
 
 function StepCard({ icon, title, description }: StepCardProps) {
@@ -156,5 +209,5 @@ function StepCard({ icon, title, description }: StepCardProps) {
       <h3 className="text-lg font-semibold mb-2">{title}</h3>
       <p className="text-gray-600">{description}</p>
     </div>
-  )
+  );
 }

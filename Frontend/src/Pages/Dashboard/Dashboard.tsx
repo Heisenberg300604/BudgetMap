@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../../Components/ui/ca
 import ViewTransactions from "./ViewTransaction";
 import Settings from "../Settings/Settings";
 import AddTransactions from "./AddTransactions";
-import { ArrowDown, ArrowUp, DollarSign, TrendingUp } from 'lucide-react'
+import { ArrowDown, ArrowUp, TrendingUp,IndianRupee } from 'lucide-react'
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip } from 'recharts'
 import { useParams } from "react-router-dom";
 interface DashboardProps {
@@ -41,7 +41,7 @@ export default function Dashboard({ activeTab = 'dashboard' }: DashboardProps) {
               <Card className="bg-white dark:bg-gray-800">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Total Expenses</CardTitle>
-                  <DollarSign className="h-4 w-4 text-muted-foreground" />
+                  <IndianRupee className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">$1,234.56</div>
