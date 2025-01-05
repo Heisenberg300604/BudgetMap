@@ -51,7 +51,7 @@ export default function LandingPage() {
           {/* <Button size="lg" variant="outline" className="border-green-600 text-green-600 hover:bg-green-50">Learn More</Button> */}
         </div>
         <div className="md:w-1/2">
-          <img src="../public/saving.svg "></img>
+          <img src="/saving.svg "></img>
         </div>
       </section>
 
