@@ -1,4 +1,4 @@
-# 💸 BudgetMap 💰 (Currently Under Development)
+# 💸 BudgetMap 💰 (Beta version)
 
 BudgetMap is a responsive, user-friendly expense tracker web app designed to help users manage their budgets on a monthly and yearly basis. Users can track expenses, manage budgets, and visualize their savings effectively.
 
