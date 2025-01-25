@@ -22,7 +22,7 @@ app.use(cors({
 
 // Routes
 app.get('/', (req, res) => {
-    res.send('Hello Javascript!');
+    res.send('Welcome to BudgetMap API !');
 });
 
 // Connect to database

@@ -11,6 +11,7 @@ import NotFound from '@/Pages/NotFound';
 import MonthList from '@/Pages/Home/MonthList';
 import CreateMonth from '@/Pages/Home/CreateMonth';
 import DataPrivacyPage from '@/Pages/Data&Privacy/DataPrivacyPage';
+import ComingSoon from '@/Pages/ComingSoon';
 
 export const router = createBrowserRouter([
   {
@@ -65,5 +66,9 @@ export const router = createBrowserRouter([
   {
     path: "*",
     element: <NotFound />,
+  },
+  {
+    path: "/coming-soon",
+    element: <ComingSoon/>,
   }
 ]);

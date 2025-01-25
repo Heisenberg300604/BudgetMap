@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-hot-toast'
 import { AlertCircle, Calendar, DollarSign, Target, ArrowLeft, Shield, PiggyBank, Loader2, ChevronDown } from 'lucide-react'
+import axios from 'axios'
+import API_BASE_URL from '@/Config/ApiConfig'
 
 interface FormData {
   name: string
@@ -90,37 +92,52 @@ export default function CreateMonth() {
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
+    e.preventDefault();
+    const user = JSON.parse(localStorage.getItem('user') || '{}')
+const userId = user?.id
+
+  
+    // Validate the form before submitting
     if (!validateForm()) {
       toast.error('Please fix the errors in the form', {
         icon: '⚠️',
         duration: 4000,
-      })
-      return
+      });
+      return;
     }
-
-    setIsSubmitting(true)
-    
+  
+    setIsSubmitting(true);
+  
     try {
-      // Simulated API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
+      // Send form data to the backend API
+      const response = await axios.post(
+        `${API_BASE_URL}/createmonth`,
+        {
+          userId: userId, // Replace with actual user ID (e.g., from localStorage or context)
+          month: formData.name,
+          year: formData.year,
+          totalIncome: formData.budget, // Assuming the budget represents the total income
+          savingTarget: formData.savingTarget,
+        }
+      );
+      console.log('API response:', response.data);
+  
       toast.success('Budget month created successfully!', {
         icon: '🎉',
         duration: 4000,
-      })
-      
-      navigate('/periods')
+      });
+  
+      navigate('/home');
     } catch (error) {
       toast.error('Failed to create budget month. Please try again.', {
         icon: '❌',
         duration: 4000,
-      })
+      });
+      console.error('Error details:', error);
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target

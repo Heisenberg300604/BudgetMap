@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { User, Bell, Lock, Trash2, DollarSign, Crown,ChevronRight, Camera, Tag } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import API_BASE_URL from '@/Config/ApiConfig'
 import toast from 'react-hot-toast'
@@ -173,9 +173,9 @@ const Settings: React.FC = () => {
                 <Crown className="w-5 h-5 text-white mr-3" />
                 <span className="text-white font-medium">Upgrade to Pro</span>
               </div>
-              <button className="px-3 py-1 bg-white text-yellow-500 text-sm font-medium rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50">
+              <Link to='/coming-soon' className="px-3 py-1 bg-white text-yellow-500 text-sm font-medium rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50">
                 Upgrade
-              </button>
+              </Link>
             </div>
           </div>
         </div>
