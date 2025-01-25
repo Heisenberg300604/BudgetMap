@@ -16,8 +16,10 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { FaGithub } from 'react-icons/fa';
+import { useAuth } from "@/Context/AuthContext";
 
 export default function LandingPage() {
+  const {isAuthenticated} = useAuth();
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-white">
       {/* Hero Section */}
@@ -31,11 +33,20 @@ export default function LandingPage() {
             with ease.
           </p>
           <div className="flex justify-start gap-2">
-          <Link to="/register">
-            <Button size="lg" className="mr-4 bg-green-600 hover:bg-green-700">
-              Get Started for Free
-            </Button>
-          </Link>
+            {isAuthenticated ? (
+              <Link to="/home">
+              <Button size="lg" className="mr-4 bg-green-600 hover:bg-green-700">
+                Go to Dashboard
+                </Button>
+                </Link>
+              ) : (
+                <Link to="/register">
+                <Button size="lg" className="mr-4 bg-green-600 hover:bg-green-700">
+                  Get Started for Free
+                </Button>
+              </Link>
+                )}
+          
           <Button
             size="lg"
             variant="outline"

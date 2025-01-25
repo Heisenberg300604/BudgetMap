@@ -4,14 +4,14 @@ import axios from 'axios'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 import { useLoading } from '../Context/LoadingContext'
-import { useUser } from '../Context/userContext'
 import API_BASE_URL from '@/Config/ApiConfig'
+import { useAuth } from '@/Context/AuthContext'
 
 const useLogin = () => {
     const [email, setEmail] = useState<string>('')
     const [password, setPassword] = useState<string>('')
     const { setIsLoading } = useLoading()
-    const { setUser } = useUser()
+    const { setIsAuthenticated } = useAuth()
     const navigate = useNavigate();
 
     const login = async () => {
@@ -35,7 +35,7 @@ const useLogin = () => {
                 localStorage.setItem('token', token);
                 localStorage.setItem('user', JSON.stringify(user));
                 toast.success('Login successful!', { duration: 4000 })
-                setUser(response.data.user) // Save user data in the context
+                setIsAuthenticated(true);
                 navigate('/home')
             }
         } catch (error: any) {
