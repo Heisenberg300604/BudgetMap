@@ -16,7 +16,8 @@ const port = process.env.PORT || 3000;
 // Middleware
 app.use(express.json());
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: 'budget-map-new.vercel.app',
+    // origin: 'http://localhost:5173',
     credentials: true,
 }));
 
