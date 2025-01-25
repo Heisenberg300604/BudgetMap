@@ -87,22 +87,22 @@ export default function AddTransactions() {
                   <button
                     type="button"
                     className={`flex-1 px-4 py-2 text-sm font-medium rounded-l-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
-                      transaction.type === 'Income'
+                      transaction.type === 'income'
                         ? 'bg-green-500 text-white'
                         : 'bg-white text-gray-700 hover:bg-gray-50'
                     }`}
-                    onClick={() => setTransaction({ ...transaction, type: 'Income' })}
+                    onClick={() => setTransaction({ ...transaction, type: 'income' })}
                   >
                     Income
                   </button>
                   <button
                     type="button"
                     className={`flex-1 px-4 py-2 text-sm font-medium rounded-r-md focus:outline-none focus:ring-2 focus:ring-red-500 ${
-                      transaction.type === 'Expense'
+                      transaction.type === 'expense'
                         ? 'bg-red-500 text-white'
                         : 'bg-white text-gray-700 hover:bg-gray-50'
                     }`}
-                    onClick={() => setTransaction({ ...transaction, type: 'Expense' })}
+                    onClick={() => setTransaction({ ...transaction, type: 'expense' })}
                   >
                     Expense
                   </button>
