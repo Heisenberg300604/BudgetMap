@@ -1,9 +1,13 @@
-import React, { useState } from 'react'
-import { User, Bell, Lock, Trash2, DollarSign, Crown,ChevronRight, Camera } from 'lucide-react'
+import React, { useEffect, useState } from 'react'
+import { User, Bell, Lock, Trash2, DollarSign, Crown,ChevronRight, Camera, Tag } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import API_BASE_URL from '@/Config/ApiConfig'
+import toast from 'react-hot-toast'
 
 const Settings: React.FC = () => {
-  const [currency, setCurrency] = useState('$')
+  const [currency, setCurrency] = useState('₹');
+  const [user, setUser] = useState<any>('');
   const navigate = useNavigate()
 
   const handleResetData = () => {
@@ -16,7 +20,47 @@ const Settings: React.FC = () => {
   const handleNavigateToDataAndPrivacy = () => {
     navigate('/data-and-privacy') // Navigate to the desired route
   }
+  
+  const getUserDetails = async () => {
+    try {
+      const token = localStorage.getItem("token"); // Get the token from localStorage
+  
+      if (!token) {
+        throw new Error("Token is missing");
+      }
+  
+      // Make the API call
+      const response = await axios.get(`${API_BASE_URL}/getuserdetails`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Attach the token to the Authorization header
+        },
+      });
+  
+      return response.data; // Return the response data
+    } catch (error) {
+      console.error(error);
+      if (axios.isAxiosError(error) && error.response) {
+        throw error.response.data.message || "Error fetching user details";
+      } else {
+        throw "Error fetching user details";
+      }
+    }
+  };
 
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const data = await getUserDetails(); // Call the API
+        setUser(data.user); // Set user data
+        // console.log(user)
+      } catch (error: any) {
+        toast.error("Failed to load user data"); // Show error toast
+      } 
+    };
+
+    fetchUserDetails();
+  }, []);
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 dark:from-green-900 dark:to-emerald-900 p-4 sm:p-6">
       <div className="max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
@@ -26,36 +70,47 @@ const Settings: React.FC = () => {
           {/* Profile Section */}
           <section className="mb-8">
             <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Profile</h2>
-            <div className="flex flex-col sm:flex-row items-center gap-4">
-              <div className="relative">
-                <User className="w-24 h-24 text-green-500" />
-                {/* <img
-                  src="/placeholder.svg?height=100&width=100"
-                  alt="Profile"
-                  className="w-24 h-24 rounded-full object-cover"
-                /> */}
-                <button className="absolute bottom-0 right-0 bg-green-500 text-white p-2 rounded-full hover:bg-green-600 transition-colors">
-                  <Camera className="w-4 h-4" />
-                </button>
-              </div>
-              <div className="flex-grow space-y-3">
-                <div>
-                  <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Full Name</label>
-                  <input
-                    type="text"
-                    id="fullName"
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                    placeholder="John Doe"
-                  />
+            <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-6 space-y-6">
+              <div className="flex flex-col sm:flex-row items-center gap-6">
+                <div className="relative group">
+                  <div className="w-32 h-32 rounded-full bg-green-100 dark:bg-green-800 flex items-center justify-center">
+                    <User className="w-20 h-20 text-green-500 dark:text-green-300" />
+                  </div>
+                  <button className="absolute bottom-0 right-0 bg-green-500 text-white p-3 rounded-full shadow-lg hover:bg-green-600 transition-all transform group-hover:scale-110">
+                    <Camera className="w-5 h-5" />
+                  </button>
                 </div>
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
-                  <input
-                    type="email"
-                    id="email"
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                    placeholder="john@example.com"
-                  />
+                
+                <div className="flex-grow space-y-4 w-full">
+                  <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">Full Name</p>
+                        <p className="font-semibold text-gray-800 dark:text-gray-200">{user.fullName}</p>
+                      </div>
+                      <Tag className="w-5 h-5 text-green-500 dark:text-green-400" />
+                    </div>
+                  </div>
+                  
+                  <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">Email</p>
+                        <p className="font-semibold text-gray-800 dark:text-gray-200">{user.email}</p>
+                      </div>
+                      <Tag className="w-5 h-5 text-green-500 dark:text-green-400" />
+                    </div>
+                  </div>
+                  
+                  <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">User ID</p>
+                        <p className="font-semibold text-gray-800 dark:text-gray-200">{user.id}</p>
+                      </div>
+                      <Tag className="w-5 h-5 text-green-500 dark:text-green-400" />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -107,10 +162,8 @@ const Settings: React.FC = () => {
                 onChange={(e) => setCurrency(e.target.value)}
                 className="rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50 dark:bg-gray-600 dark:border-gray-500 dark:text-white"
               >
+                <option value="₹">₹ (INR)</option>
                 <option value="$">$ (USD)</option>
-                <option value="€">€ (EUR)</option>
-                <option value="£">£ (GBP)</option>
-                <option value="¥">¥ (JPY)</option>
               </select>
             </div>
 

@@ -15,7 +15,8 @@ export default function AddTransactions() {
     date: '',
     time: ''
   })
-  const userId = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).id : ''; // will change it later on upon building user context 
+  const user = localStorage.getItem('user');
+  const userId = user ? JSON.parse(user).id : ''; // will change it later on upon building user context 
 
   const addTransaction = async (transactionData:any) => { // mention the transaction data type (to be done later)
     try {

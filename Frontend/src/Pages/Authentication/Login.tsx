@@ -2,6 +2,7 @@ import { ChangeEvent, FormEvent } from 'react'
 import useLogin from '@/hooks/useLogin'
 import Loader from '@/Components/Shared/Loader'
 import { useLoading } from '@/Context/LoadingContext'
+import { Link } from 'react-router-dom'
 
 const Login: React.FC = () => {
   const { email, setEmail, password, setPassword, login } = useLogin()
@@ -70,11 +71,11 @@ const Login: React.FC = () => {
           </div>
         </form>
 
-        <div className="text-sm text-center">
+        <Link to="/register" className="text-sm text-center">
           <a href="#" className="font-medium text-green-600 hover:text-green-500 hover:underline">
             Not registered? Create an account
           </a>
-        </div>
+        </Link>
       </div>
     </div>
   )

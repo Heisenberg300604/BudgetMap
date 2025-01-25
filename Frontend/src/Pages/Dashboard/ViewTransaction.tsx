@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react'
-import { ArrowUpDown, ChevronDown, DollarSign, Filter, Search } from 'lucide-react'
+import { ArrowUpDown, ChevronDown,Filter, Search } from 'lucide-react'
 
 // Dummy data (will be replaced by actual API data)
 const dummyTransactions = [
