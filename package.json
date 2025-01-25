@@ -1,0 +1,15 @@
+{
+  "name": "budgetmap",
+  "version": "1.0.0",
+  "description": "modern expense tracker for genZ",
+  "main": "index.js",
+  "scripts": {
+    "buildFront": "cd Frontend && npm install",
+    "buildBack": "cd Backend && npm install",
+    "front": "cd Frontend && npm run dev",
+    "back": "cd Backend && npm run start",
+    "buildVite": "cd Frontend && npm run build"
+  },
+  "author": "Heisenberg300604",
+  "license": "ISC"
+}
